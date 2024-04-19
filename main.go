@@ -10,7 +10,9 @@ import (
 
 func main() {
 	c := &controller.Ctrl{
-		EventChannel: make(chan string),
+		HomeChannel:    make(chan string),
+		ActionsChannel: make(chan string),
+		Tab:            "home",
 	}
 
 	myApp := app.New()
@@ -18,9 +20,13 @@ func main() {
 	appWindow.Resize(fyne.NewSize(750, 250))
 
 	tabs := container.NewAppTabs(
-		container.NewTabItem("Home", view.Home(c)),
-		container.NewTabItem("AWS Actions", view.Actions(c)),
+		container.NewTabItem("home", view.Home(c)),
+		container.NewTabItem("actions", view.Actions(c)),
 	)
+
+	tabs.OnSelected = func(item *container.TabItem) {
+		c.Tab = item.Text
+	}
 
 	tabs.SetTabLocation(container.TabLocationTop)
 

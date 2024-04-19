@@ -11,9 +11,9 @@ func (c *Ctrl) Home(rec ContentReceiver) func() {
 	return func() {
 		err := util.WriteIntoAwsCredentials(rec.Receive())
 		if err != nil {
-			c.EventChannel <- err.Error()
+			c.HomeChannel <- err.Error()
 			return
 		}
-		c.EventChannel <- FileCouldNotSavedErr.Error()
+		c.HomeChannel <- FileCouldNotSavedErr.Error()
 	}
 }

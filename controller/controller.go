@@ -5,6 +5,7 @@ import (
 	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/widget"
+	"strings"
 )
 
 type Source func() string
@@ -14,25 +15,33 @@ type ContentReceiver interface {
 }
 
 type Ctrl struct {
-	EventChannel chan string
+	Tab            string
+	HomeChannel    chan string
+	ActionsChannel chan string
 }
 
-func App(content *fyne.Container, c *Ctrl) *fyne.Container {
-	statusLabelTxt := func(msg string) string {
-		return "Status: " + msg
-	}
-	statusLabel := widget.NewLabel(statusLabelTxt(""))
-
+func HomeWrapper(content *fyne.Container, statusLabel *widget.Label, c *Ctrl) *fyne.Container {
 	go func() {
 		for {
 			select {
-			case msg := <-c.EventChannel:
-				println(msg)
-				statusLabel.Text = statusLabelTxt(msg)
+			case homeMsg := <-c.HomeChannel:
+				statusLabel.Text = homeMsg
 				statusLabel.Refresh()
 			}
 		}
 	}()
+	return container.NewVBox(layout.NewSpacer(), content, statusLabel)
+}
 
+func ActionsWrapper(content *fyne.Container, statusLabel *widget.Label, c *Ctrl) *fyne.Container {
+	go func() {
+		for {
+			select {
+			case actionsMsg := <-c.ActionsChannel:
+				statusLabel.Text = actionsMsg
+				statusLabel.Refresh()
+			}
+		}
+	}()
 	return container.NewVBox(layout.NewSpacer(), content, statusLabel)
 }

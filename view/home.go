@@ -26,12 +26,12 @@ func Home(c *controller.Ctrl) *fyne.Container {
 	}}
 
 	sendButton := widget.NewButton("Absenden", c.Home(rc))
-
 	label := widget.NewLabel("Hier Credentials eingeben:")
+	statusLabel := widget.NewLabel(StatusLabelTxt(""))
 
-	return controller.App(container.NewVBox(
+	return controller.HomeWrapper(container.NewVBox(
 		label,
 		textArea,
 		sendButton,
-	), c)
+	), statusLabel, c)
 }

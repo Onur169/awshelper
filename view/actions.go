@@ -19,9 +19,10 @@ const EchoCmd = "echo $HOME"
 func Actions(c *controller.Ctrl) *fyne.Container {
 	label := widget.NewLabel("Wähle ein Command aus: ")
 	radio := widget.NewRadioGroup([]string{LsLaCmd, EchoCmd}, c.Actions())
+	statusLabel := widget.NewLabel(StatusLabelTxt(""))
 
-	return controller.App(container.NewVBox(
+	return controller.ActionsWrapper(container.NewVBox(
 		label,
 		radio,
-	), c)
+	), statusLabel, c)
 }
