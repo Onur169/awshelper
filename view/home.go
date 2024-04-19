@@ -29,9 +29,9 @@ func Home(c *controller.Ctrl) *fyne.Container {
 
 	label := widget.NewLabel("Hier Credentials eingeben:")
 
-	return container.NewVBox(
+	return controller.App(container.NewVBox(
 		label,
 		textArea,
 		sendButton,
-	)
+	), c)
 }

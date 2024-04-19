@@ -2,6 +2,7 @@ package util
 
 import (
 	"os"
+	"os/exec"
 )
 
 func WriteIntoAwsCredentials(content string) error {
@@ -11,11 +12,24 @@ func WriteIntoAwsCredentials(content string) error {
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+
+	defer func(file *os.File) {
+		_ = file.Close()
+	}(file)
 
 	if _, err := file.Write([]byte(content)); err != nil {
 		return err
 	}
 
 	return nil
+}
+
+func RunCommand(command string) (string, error) {
+	cmd := exec.Command("bash", "-c", command)
+	output, err := cmd.Output()
+	if err != nil {
+		return "", err
+	}
+
+	return string(output), nil
 }
