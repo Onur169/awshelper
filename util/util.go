@@ -11,7 +11,7 @@ const AppHeight = 75
 func WriteIntoAwsCredentials(content string) error {
 	filePath := os.ExpandEnv("$HOME/.aws/credentials")
 
-	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_APPEND, 0644)
+	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
 	if err != nil {
 		return err
 	}
