@@ -51,22 +51,29 @@ func ActionsWrapper(content *fyne.Container, c *Ctrl) *fyne.Container {
 func wrapperBoxH(content *fyne.Container, c *Ctrl) *fyne.Container {
 	statusBoxContainer := container.NewVBox(c.LoadingLabel, c.ResultLabel)
 	statusBoxScroll := container.NewScroll(statusBoxContainer)
-
-	statusBoxScroll.SetMinSize(fyne.NewSize(util.AppWidth, 100))
+	statusBoxScroll.SetMinSize(fyne.NewSize(util.AppWidth, util.AppHeight))
 	statusBoxScroll.Refresh()
 
+	contentScroll := container.NewVScroll(content)
+	contentScroll.SetMinSize(fyne.NewSize(util.AppWidth/3, util.AppHeight))
+	contentScroll.Refresh()
+
 	return container.NewHBox(
-		content,
+		contentScroll,
 		statusBoxScroll,
 	)
 }
 
 func wrapperBoxV(content *fyne.Container, c *Ctrl) *fyne.Container {
 	statusBoxContainer := container.NewVBox(c.LoadingLabel, c.ResultLabel)
+	statusBoxScroll := container.NewVScroll(statusBoxContainer)
+
+	statusBoxScroll.SetMinSize(fyne.NewSize(util.AppWidth, util.AppHeight))
+	statusBoxScroll.Refresh()
 
 	return container.NewBorder(
 		nil,
-		statusBoxContainer,
+		statusBoxScroll,
 		nil,
 		nil,
 		content,

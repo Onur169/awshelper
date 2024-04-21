@@ -5,8 +5,8 @@ import (
 	"os/exec"
 )
 
-const AppWidth = 750
-const AppHeight = 500
+const AppWidth = 500
+const AppHeight = 75
 
 func WriteIntoAwsCredentials(content string) error {
 	filePath := os.ExpandEnv("$HOME/.aws/credentials")
@@ -37,24 +37,12 @@ func RunCommand(command string) (string, error) {
 	return string(output), nil
 }
 
-func TruncateString(s string, length int) string {
-	if len(s) <= length {
-		return s
-	}
-	return s[:length] + "..."
-}
-
-const AwsLoginCmd = "aws-login"
-const KubectlGetPodsCmd = "kubectl-get-pods"
-const SleepCmd = "sleep-echo"
-const LsCmd = "list files"
-
 func CommandMap() map[string]string {
 	m := make(map[string]string)
-	m[AwsLoginCmd] = "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 175218586454.dkr.ecr.eu-central-1.amazonaws.com"
-	m[KubectlGetPodsCmd] = "kubectl get pods --namespace ma4b"
-	m[SleepCmd] = "sleep 4 && echo \"Waited 2 sec\" "
-	m[LsCmd] = "ls -la"
+	m["aws-login"] = "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 175218586454.dkr.ecr.eu-central-1.amazonaws.com"
+	m["kubectl-get-pods"] = "kubectl get pods --namespace ma4b"
+	m["sleep-test"] = "sleep 4 && echo \"Waited 2 sec\" "
+	m["ls-la-test"] = "ls -la"
 	return m
 }
 

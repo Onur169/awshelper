@@ -10,14 +10,11 @@ import (
 func Home(c *controller.Ctrl) *fyne.Container {
 	textArea := widget.NewEntry()
 	textArea.MultiLine = true
-	//textArea.SetMinRowsVisible(10)
-	content := textArea.Text
+	textArea.SetPlaceHolder("Place your aws credentials here")
 
-	sendButton := widget.NewButton("Absenden", c.Home(content))
-	label := widget.NewLabel("Hier Credentials eingeben:")
+	sendButton := widget.NewButton("Absenden", c.Home(textArea.Text))
 
 	return controller.HomeWrapper(container.NewVBox(
-		label,
 		textArea,
 		sendButton,
 	), c)

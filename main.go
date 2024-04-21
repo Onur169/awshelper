@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"onursahin.dev/awshelper/controller"
 	"onursahin.dev/awshelper/util"
@@ -21,14 +22,17 @@ func main() {
 
 	myApp := app.New()
 	appWindow := myApp.NewWindow("awshelper")
-	appWindow.Resize(fyne.NewSize(util.AppWidth, 0))
+	appWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight))
 
 	homeView := view.Home(c)
 	actionsView := view.Actions(c)
 
+	homeTab := container.NewTabItemWithIcon("home", theme.HomeIcon(), homeView)
+	actionsTab := container.NewTabItemWithIcon("actions", theme.ComputerIcon(), actionsView)
+
 	tabList := []*container.TabItem{
-		container.NewTabItem("home", homeView),
-		container.NewTabItem("actions", actionsView),
+		homeTab,
+		actionsTab,
 	}
 
 	tabs := container.NewAppTabs(tabList...)
@@ -37,10 +41,6 @@ func main() {
 		c.LoadingLabel.Text = ""
 		c.ResultLabel.Refresh()
 		c.LoadingLabel.Refresh()
-
-		/*		if t.Text == "actions" {
-				homeView.Move(fyne.NewPos(-1, -1))
-			}*/
 	}
 	tabs.SetTabLocation(container.TabLocationTop)
 

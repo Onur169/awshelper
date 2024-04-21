@@ -9,17 +9,14 @@ import (
 )
 
 func Actions(c *controller.Ctrl) *fyne.Container {
-	label := widget.NewLabel("Wähle ein Command aus: ")
+	var cmdList []string
+	for k := range util.CommandMap() {
+		cmdList = append(cmdList, k)
+	}
 
-	radio := widget.NewRadioGroup([]string{
-		util.AwsLoginCmd,
-		util.KubectlGetPodsCmd,
-		util.SleepCmd,
-		util.LsCmd,
-	}, c.Actions())
+	radio := widget.NewRadioGroup(cmdList, c.Actions())
 
 	return controller.ActionsWrapper(container.NewVBox(
-		label,
 		radio,
 	), c)
 }
