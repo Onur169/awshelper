@@ -6,11 +6,11 @@ import (
 
 const FileCouldSaveSuccessfully = "file could be saved successfully"
 
-func (c *Ctrl) Home(content string) func() {
+func (c *Ctrl) Home(content func() string) func() {
 	return func() {
 		c.IsLoadingChannel <- true
 
-		err := util.WriteIntoAwsCredentials(content)
+		err := util.WriteIntoAwsCredentials(content())
 		if err != nil {
 			c.HomeChannel <- err.Error()
 			c.IsLoadingChannel <- false
