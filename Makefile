@@ -1,2 +1,2 @@
 build:
-	fyne package -os darwin -icon myapp.jpeg
+	fyne package -icon myapp.jpeg

@@ -12,12 +12,15 @@ import (
 )
 
 func main() {
+	resultLabel := widget.NewLabel("")
+	loadingLabel := widget.NewLabel("")
+
 	c := &controller.Ctrl{
 		HomeChannel:      make(chan string),
 		ActionsChannel:   make(chan string),
 		IsLoadingChannel: make(chan bool),
-		ResultLabel:      widget.NewLabel(""),
-		LoadingLabel:     widget.NewLabel(""),
+		ResultLabel:      resultLabel,
+		LoadingLabel:     loadingLabel,
 	}
 
 	myApp := app.New()

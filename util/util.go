@@ -41,7 +41,6 @@ func CommandMap() map[string]string {
 	m := make(map[string]string)
 	m["aws-login"] = "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 175218586454.dkr.ecr.eu-central-1.amazonaws.com"
 	m["kubectl-get-pods"] = "kubectl get pods --namespace ma4b"
-	m["sleep-test"] = "sleep 4 && echo \"Waited 2 sec\" "
 	m["ls-la-test"] = "ls -la"
 	return m
 }
