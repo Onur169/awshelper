@@ -3,45 +3,72 @@ package controller
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"fyne.io/fyne/v2/layout"
+	"onursahin.dev/awshelper/util"
+
 	"fyne.io/fyne/v2/widget"
-	"strings"
 )
 
-type Source func() string
-
-type ContentReceiver interface {
-	Receive() string
-}
-
 type Ctrl struct {
-	Tab            string
-	HomeChannel    chan string
-	ActionsChannel chan string
+	HomeChannel      chan string
+	ActionsChannel   chan string
+	IsLoadingChannel chan bool
+	ResultLabel      *widget.Label
+	LoadingLabel     *widget.Label
 }
 
-func HomeWrapper(content *fyne.Container, statusLabel *widget.Label, c *Ctrl) *fyne.Container {
+func HomeWrapper(content *fyne.Container, c *Ctrl) *fyne.Container {
 	go func() {
 		for {
 			select {
 			case homeMsg := <-c.HomeChannel:
-				statusLabel.Text = homeMsg
-				statusLabel.Refresh()
+				c.ResultLabel.Text = homeMsg
+				c.ResultLabel.Refresh()
+			case isLoadingMsg := <-c.IsLoadingChannel:
+				c.LoadingLabel.Text = util.IsLoadingMsg(isLoadingMsg)
+				c.LoadingLabel.Refresh()
 			}
 		}
 	}()
-	return container.NewVBox(layout.NewSpacer(), content, statusLabel)
+	return wrapperBoxV(content, c)
 }
 
-func ActionsWrapper(content *fyne.Container, statusLabel *widget.Label, c *Ctrl) *fyne.Container {
+func ActionsWrapper(content *fyne.Container, c *Ctrl) *fyne.Container {
 	go func() {
 		for {
 			select {
 			case actionsMsg := <-c.ActionsChannel:
-				statusLabel.Text = actionsMsg
-				statusLabel.Refresh()
+				c.ResultLabel.Text = actionsMsg
+				c.ResultLabel.Refresh()
+			case isLoadingMsg := <-c.IsLoadingChannel:
+				c.LoadingLabel.Text = util.IsLoadingMsg(isLoadingMsg)
+				c.LoadingLabel.Refresh()
 			}
 		}
 	}()
-	return container.NewVBox(layout.NewSpacer(), content, statusLabel)
+	return wrapperBoxH(content, c)
+}
+
+func wrapperBoxH(content *fyne.Container, c *Ctrl) *fyne.Container {
+	statusBoxContainer := container.NewVBox(c.LoadingLabel, c.ResultLabel)
+	statusBoxScroll := container.NewScroll(statusBoxContainer)
+
+	statusBoxScroll.SetMinSize(fyne.NewSize(util.AppWidth, 100))
+	statusBoxScroll.Refresh()
+
+	return container.NewHBox(
+		content,
+		statusBoxScroll,
+	)
+}
+
+func wrapperBoxV(content *fyne.Container, c *Ctrl) *fyne.Container {
+	statusBoxContainer := container.NewVBox(c.LoadingLabel, c.ResultLabel)
+
+	return container.NewBorder(
+		nil,
+		statusBoxContainer,
+		nil,
+		nil,
+		content,
+	)
 }

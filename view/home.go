@@ -7,31 +7,18 @@ import (
 	"onursahin.dev/awshelper/controller"
 )
 
-type HomeContentReceiver struct {
-	controller.ContentReceiver
-	controller.Source
-}
-
-func (r *HomeContentReceiver) Receive() string {
-	return r.Source()
-}
-
 func Home(c *controller.Ctrl) *fyne.Container {
 	textArea := widget.NewEntry()
 	textArea.MultiLine = true
-	textArea.SetMinRowsVisible(10)
+	//textArea.SetMinRowsVisible(10)
+	content := textArea.Text
 
-	rc := &HomeContentReceiver{Source: func() string {
-		return textArea.Text
-	}}
-
-	sendButton := widget.NewButton("Absenden", c.Home(rc))
+	sendButton := widget.NewButton("Absenden", c.Home(content))
 	label := widget.NewLabel("Hier Credentials eingeben:")
-	statusLabel := widget.NewLabel(StatusLabelTxt(""))
 
 	return controller.HomeWrapper(container.NewVBox(
 		label,
 		textArea,
 		sendButton,
-	), statusLabel, c)
+	), c)
 }

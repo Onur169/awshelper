@@ -1,19 +1,22 @@
 package controller
 
 import (
-	"errors"
 	"onursahin.dev/awshelper/util"
 )
 
-var FileCouldNotSavedErr = errors.New("file could be saved successfully")
+const FileCouldSaveSuccessfully = "file could be saved successfully"
 
-func (c *Ctrl) Home(rec ContentReceiver) func() {
+func (c *Ctrl) Home(content string) func() {
 	return func() {
-		err := util.WriteIntoAwsCredentials(rec.Receive())
+		c.IsLoadingChannel <- true
+
+		err := util.WriteIntoAwsCredentials(content)
 		if err != nil {
 			c.HomeChannel <- err.Error()
+			c.IsLoadingChannel <- false
 			return
 		}
-		c.HomeChannel <- FileCouldNotSavedErr.Error()
+		c.HomeChannel <- FileCouldSaveSuccessfully
+		c.IsLoadingChannel <- false
 	}
 }
