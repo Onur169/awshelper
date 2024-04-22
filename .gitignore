@@ -1,1 +1,2 @@
 *.app
+go_build*
