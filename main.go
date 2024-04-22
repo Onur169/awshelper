@@ -8,12 +8,16 @@ import (
 	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
+	"log"
 	"onursahin.dev/awshelper/controller"
 	"onursahin.dev/awshelper/util"
 	"onursahin.dev/awshelper/view"
 )
 
 func main() {
+	util.LoadEnv()
+	log.Println("MOCK_PODS env =", util.GetMockPodsEnv())
+
 	c := &controller.Ctrl{
 		HomeChannel:      make(chan string),
 		ActionsChannel:   make(chan controller.ActionsChannelMsg),

@@ -2,8 +2,11 @@ package util
 
 import (
 	"errors"
+	"github.com/joho/godotenv"
+	"log"
 	"os"
 	"os/exec"
+	"strconv"
 	"strings"
 )
 
@@ -16,6 +19,16 @@ type Pod struct {
 	Status   string
 	Restarts string
 	Age      string
+}
+
+func MockPods() []Pod {
+	return []Pod{
+		{Name: "Pod1", Ready: "True", Status: "Running", Restarts: "0", Age: "10m"},
+		{Name: "Pod2", Ready: "False", Status: "Pending", Restarts: "1", Age: "5m"},
+		{Name: "Pod3", Ready: "True", Status: "Running", Restarts: "2", Age: "20m"},
+		{Name: "Pod4", Ready: "True", Status: "Running", Restarts: "0", Age: "15m"},
+		{Name: "Pod5", Ready: "False", Status: "Pending", Restarts: "3", Age: "25m"},
+	}
 }
 
 func ParsePods(input string) ([]Pod, error) {
@@ -127,4 +140,25 @@ func IsLoadingMsg(isLoading bool) string {
 		return "Loading..."
 	}
 	return "Finished!"
+}
+
+func LoadEnv() {
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Println(err)
+	}
+}
+
+func GetMockPodsEnv() bool {
+	mockPodsStr := os.Getenv("MOCK_PODS")
+	if mockPodsStr == "" {
+		return false
+	}
+
+	mockPods, err := strconv.ParseBool(mockPodsStr)
+	if err != nil {
+		return false
+	}
+
+	return mockPods
 }

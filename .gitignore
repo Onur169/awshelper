@@ -1,2 +1,3 @@
 *.app
 go_build*
+.env
