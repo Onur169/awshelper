@@ -1,6 +1,7 @@
 package util
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 	"strings"
@@ -8,6 +9,52 @@ import (
 
 const AppWidth = 500
 const AppHeight = 75
+
+type Pod struct {
+	Name     string
+	Ready    string
+	Status   string
+	Restarts string
+	Age      string
+}
+
+func ParsePods(input string) ([]Pod, error) {
+	var pods []Pod
+
+	lines := strings.SplitN(input, "\n", -1)
+
+	// Check if the input is empty
+	if len(lines) == 0 {
+		return nil, errors.New("input is empty")
+	}
+
+	// Check if the header line is present
+	if len(lines) < 2 {
+		return nil, errors.New("header line is missing")
+	}
+
+	// Skip the header line
+	lines = lines[1:]
+
+	for _, line := range lines {
+		fields := strings.Fields(line)
+		if len(fields) != 5 {
+			// return nil, fmt.Errorf("invalid line: %s", line)
+			continue
+		}
+
+		pod := Pod{
+			Name:     fields[0],
+			Ready:    fields[1],
+			Status:   fields[2],
+			Restarts: fields[3],
+			Age:      fields[4],
+		}
+		pods = append(pods, pod)
+	}
+
+	return pods, nil
+}
 
 func ReplaceFirstLine(content string) string {
 	lines := strings.Split(content, "\n")

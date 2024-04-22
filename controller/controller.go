@@ -3,14 +3,20 @@ package controller
 import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/container"
-	"onursahin.dev/awshelper/util"
-
 	"fyne.io/fyne/v2/widget"
+	"onursahin.dev/awshelper/util"
 )
+
+type ActionsChannelMsg struct {
+	TriggeredCmdKey string
+	TriggeredCmd    string
+	CmdOutput       string
+}
 
 type Ctrl struct {
 	HomeChannel      chan string
-	ActionsChannel   chan string
+	ActionsChannel   chan ActionsChannelMsg
+	PodsChannel      chan []util.Pod
 	IsLoadingChannel chan bool
 	ResultLabel      *widget.Label
 	LoadingLabel     *widget.Label
@@ -37,8 +43,14 @@ func ActionsWrapper(content *fyne.Container, c *Ctrl) *fyne.Container {
 		for {
 			select {
 			case actionsMsg := <-c.ActionsChannel:
-				c.ResultLabel.Text = actionsMsg
+				c.ResultLabel.Text = actionsMsg.CmdOutput
 				c.ResultLabel.Refresh()
+
+				if actionsMsg.TriggeredCmdKey == "kubectl-get-pods" {
+					if pods, err := util.ParsePods(actionsMsg.CmdOutput); err == nil {
+						c.PodsChannel <- pods
+					}
+				}
 			case isLoadingMsg := <-c.IsLoadingChannel:
 				c.LoadingLabel.Text = util.IsLoadingMsg(isLoadingMsg)
 				c.LoadingLabel.Refresh()

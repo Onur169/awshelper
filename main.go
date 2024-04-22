@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -15,7 +16,7 @@ import (
 func main() {
 	c := &controller.Ctrl{
 		HomeChannel:      make(chan string),
-		ActionsChannel:   make(chan string),
+		ActionsChannel:   make(chan controller.ActionsChannelMsg),
 		IsLoadingChannel: make(chan bool),
 		ResultLabel:      widget.NewLabel(""),
 		LoadingLabel:     widget.NewLabel(""),
@@ -34,6 +35,7 @@ func main() {
 			content,
 		)
 	}
+
 	homeView := viewWrapper(view.Home(c))
 	actionsView := viewWrapper(view.Actions(c))
 
@@ -55,5 +57,17 @@ func main() {
 	tabs.SetTabLocation(container.TabLocationTop)
 
 	appWindow.SetContent(tabs)
+
+	// todo check why read from channel not working
+	go func() {
+		for {
+			select {
+			case podMsg := <-c.PodsChannel:
+				fmt.Println(podMsg)
+				view.Pods(c, podMsg)
+			}
+		}
+	}()
+
 	appWindow.ShowAndRun()
 }

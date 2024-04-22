@@ -19,11 +19,19 @@ func (c *Ctrl) Actions() func(string) {
 
 			out, err = util.RunCommand(cmd)
 			if err != nil {
-				c.ActionsChannel <- util.CmdErrResult(err)
+				c.ActionsChannel <- ActionsChannelMsg{
+					CmdOutput:       util.CmdErrResult(err),
+					TriggeredCmdKey: value,
+					TriggeredCmd:    cmd,
+				}
 				c.IsLoadingChannel <- false
 				return
 			}
-			c.ActionsChannel <- util.CmdOutResult(out)
+			c.ActionsChannel <- ActionsChannelMsg{
+				CmdOutput:       util.CmdOutResult(out),
+				TriggeredCmdKey: value,
+				TriggeredCmd:    cmd,
+			}
 
 			c.IsLoadingChannel <- false
 		}()
