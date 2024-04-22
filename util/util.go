@@ -28,6 +28,11 @@ func WriteIntoAwsCredentials(content string) error {
 }
 
 func RunCommand(command string) (string, error) {
+	err := os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin")
+	if err != nil {
+		return "", err
+	}
+
 	cmd := exec.Command("bash", "-c", command)
 	output, err := cmd.Output()
 	if err != nil {
