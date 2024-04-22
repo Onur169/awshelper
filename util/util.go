@@ -3,12 +3,27 @@ package util
 import (
 	"os"
 	"os/exec"
+	"strings"
 )
 
 const AppWidth = 500
 const AppHeight = 75
 
+func ReplaceFirstLine(content string) string {
+	lines := strings.Split(content, "\n")
+
+	if len(lines) == 0 {
+		return content
+	}
+
+	lines[0] = "[default]"
+
+	return strings.Join(lines, "\n")
+}
+
 func WriteIntoAwsCredentials(content string) error {
+	updatedContent := ReplaceFirstLine(content)
+
 	filePath := os.ExpandEnv("$HOME/.aws/credentials")
 
 	file, err := os.OpenFile(filePath, os.O_WRONLY|os.O_CREATE|os.O_TRUNC, 0644)
@@ -20,7 +35,7 @@ func WriteIntoAwsCredentials(content string) error {
 		_ = file.Close()
 	}(file)
 
-	if _, err := file.Write([]byte(content)); err != nil {
+	if _, err := file.Write([]byte(updatedContent)); err != nil {
 		return err
 	}
 

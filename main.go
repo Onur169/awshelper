@@ -4,6 +4,7 @@ import (
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
+	"fyne.io/fyne/v2/layout"
 	"fyne.io/fyne/v2/theme"
 	"fyne.io/fyne/v2/widget"
 	"onursahin.dev/awshelper/controller"
@@ -12,23 +13,29 @@ import (
 )
 
 func main() {
-	resultLabel := widget.NewLabel("")
-	loadingLabel := widget.NewLabel("")
-
 	c := &controller.Ctrl{
 		HomeChannel:      make(chan string),
 		ActionsChannel:   make(chan string),
 		IsLoadingChannel: make(chan bool),
-		ResultLabel:      resultLabel,
-		LoadingLabel:     loadingLabel,
+		ResultLabel:      widget.NewLabel(""),
+		LoadingLabel:     widget.NewLabel(""),
 	}
 
 	myApp := app.New()
 	appWindow := myApp.NewWindow("awshelper")
 	appWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight))
 
-	homeView := view.Home(c)
-	actionsView := view.Actions(c)
+	viewWrapper := func(content *fyne.Container) *fyne.Container {
+		return container.NewBorder(
+			layout.NewSpacer(),
+			layout.NewSpacer(),
+			layout.NewSpacer(),
+			layout.NewSpacer(),
+			content,
+		)
+	}
+	homeView := viewWrapper(view.Home(c))
+	actionsView := viewWrapper(view.Actions(c))
 
 	homeTab := container.NewTabItemWithIcon("home", theme.HomeIcon(), homeView)
 	actionsTab := container.NewTabItemWithIcon("actions", theme.ComputerIcon(), actionsView)
