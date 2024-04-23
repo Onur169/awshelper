@@ -2,12 +2,13 @@ package util
 
 import (
 	"errors"
-	"github.com/joho/godotenv"
 	"log"
 	"os"
 	"os/exec"
 	"strconv"
 	"strings"
+
+	"github.com/joho/godotenv"
 )
 
 const AppWidth = 500
