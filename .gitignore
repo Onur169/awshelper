@@ -1,3 +1,4 @@
 *.app
 go_build*
 .env
+.idea
