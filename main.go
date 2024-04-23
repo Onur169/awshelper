@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -15,11 +14,7 @@ import (
 )
 
 func main() {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Ein Fehler ist aufgetreten:", r)
-		}
-	}()
+	myApp := app.New()
 
 	util.LoadEnv()
 	log.Println("MOCK_PODS env =", util.GetMockPodsEnv())
@@ -31,11 +26,12 @@ func main() {
 		PodsChannel:      make(chan []util.Pod),
 		ResultLabel:      widget.NewLabel(""),
 		LoadingLabel:     widget.NewLabel(""),
+		PodWindow:        myApp.NewWindow("Pods"),
 	}
 
-	myApp := app.New()
 	appWindow := myApp.NewWindow("awshelper")
 	appWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight))
+	appWindow.SetMaster()
 
 	viewWrapper := func(content *fyne.Container) *fyne.Container {
 		return container.NewBorder(
@@ -69,14 +65,11 @@ func main() {
 
 	appWindow.SetContent(tabs)
 
-	// todo check why read from channel not working
-
 	go func() {
 		for {
 			select {
 			case podMsg := <-c.PodsChannel:
 				view.Pods(c, podMsg)
-				fmt.Println(podMsg)
 			}
 		}
 	}()

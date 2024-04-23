@@ -1,24 +1,14 @@
 package view
 
 import (
-	"fmt"
 	"fyne.io/fyne/v2"
-	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/widget"
 	"onursahin.dev/awshelper/controller"
 	"onursahin.dev/awshelper/util"
 )
 
 func Pods(c *controller.Ctrl, pods []util.Pod) {
-	defer func() {
-		if r := recover(); r != nil {
-			fmt.Println("Ein Fehler ist aufgetreten:", r)
-		}
-	}()
-
-	podApp := app.New()
-	podWindow := podApp.NewWindow("Pods")
-	podWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight))
+	c.PodWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight))
 
 	var data = pods
 	list := widget.NewList(
@@ -33,6 +23,6 @@ func Pods(c *controller.Ctrl, pods []util.Pod) {
 		},
 	)
 
-	podWindow.SetContent(list)
-	podWindow.Show()
+	c.PodWindow.SetContent(list)
+	c.PodWindow.Show()
 }

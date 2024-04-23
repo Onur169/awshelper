@@ -20,6 +20,7 @@ type Ctrl struct {
 	IsLoadingChannel chan bool
 	ResultLabel      *widget.Label
 	LoadingLabel     *widget.Label
+	PodWindow        fyne.Window
 }
 
 func HomeWrapper(content *fyne.Container, c *Ctrl) *fyne.Container {
