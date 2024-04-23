@@ -8,7 +8,6 @@ import (
 )
 
 func Pods(c *controller.Ctrl, pods []util.Pod) {
-	c.PodWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight))
 
 	var data = pods
 	list := widget.NewList(

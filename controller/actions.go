@@ -27,6 +27,7 @@ func (c *Ctrl) Actions() func(string) {
 				c.IsLoadingChannel <- false
 				return
 			}
+
 			c.ActionsChannel <- ActionsChannelMsg{
 				CmdOutput:       util.CmdOutResult(out),
 				TriggeredCmdKey: value,

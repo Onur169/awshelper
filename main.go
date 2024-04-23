@@ -15,6 +15,12 @@ import (
 
 func main() {
 	myApp := app.New()
+	podWindow := myApp.NewWindow("Pods")
+	podWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight*4))
+	podWindow.CenterOnScreen()
+	podWindow.SetCloseIntercept(func() {
+		podWindow.Hide()
+	})
 
 	util.LoadEnv()
 	log.Println("MOCK_PODS env =", util.GetMockPodsEnv())
@@ -26,12 +32,13 @@ func main() {
 		PodsChannel:      make(chan []util.Pod),
 		ResultLabel:      widget.NewLabel(""),
 		LoadingLabel:     widget.NewLabel(""),
-		PodWindow:        myApp.NewWindow("Pods"),
+		PodWindow:        podWindow,
 	}
 
 	appWindow := myApp.NewWindow("awshelper")
 	appWindow.Resize(fyne.NewSize(util.AppWidth, util.AppHeight))
 	appWindow.SetMaster()
+	appWindow.CenterOnScreen()
 
 	viewWrapper := func(content *fyne.Container) *fyne.Container {
 		return container.NewBorder(
