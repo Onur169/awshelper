@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/app"
 	"fyne.io/fyne/v2/container"
@@ -14,6 +15,12 @@ import (
 )
 
 func main() {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Ein Fehler ist aufgetreten:", r)
+		}
+	}()
+
 	util.LoadEnv()
 	log.Println("MOCK_PODS env =", util.GetMockPodsEnv())
 
@@ -68,7 +75,8 @@ func main() {
 		for {
 			select {
 			case podMsg := <-c.PodsChannel:
-				go func() { view.Pods(c, podMsg) }()
+				view.Pods(c, podMsg)
+				fmt.Println(podMsg)
 			}
 		}
 	}()

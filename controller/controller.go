@@ -49,9 +49,7 @@ func ActionsWrapper(content *fyne.Container, c *Ctrl) *fyne.Container {
 				if actionsMsg.TriggeredCmdKey == "kubectl-get-pods" {
 					if util.GetMockPodsEnv() {
 						c.PodsChannel <- util.MockPods()
-						return
-					}
-					if pods, err := util.ParsePods(actionsMsg.CmdOutput); err == nil {
+					} else if pods, err := util.ParsePods(actionsMsg.CmdOutput); err == nil {
 						c.PodsChannel <- pods
 					}
 				}
