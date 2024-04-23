@@ -2,6 +2,7 @@ package util
 
 import (
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -103,8 +104,12 @@ func WriteIntoAwsCredentials(content string) error {
 	return nil
 }
 
+func SetPathForCmdExec() error {
+	return os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin")
+}
+
 func RunCommand(command string) (string, error) {
-	err := os.Setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/homebrew/bin")
+	err := SetPathForCmdExec()
 	if err != nil {
 		return "", err
 	}
@@ -162,4 +167,24 @@ func GetMockPodsEnv() bool {
 	}
 
 	return mockPods
+}
+
+func OpenCmdWithCommand(command string) {
+	err := SetPathForCmdExec()
+
+	cmd := exec.Command(
+		"osascript",
+		"-e",
+		fmt.Sprintf("tell application \"Terminal\" to do script \" %s \"", command),
+	)
+	err = cmd.Start()
+	if err != nil {
+		log.Printf("cmd.Run() failed with %s\n", err)
+		return
+	}
+	err = cmd.Wait()
+	if err != nil {
+		log.Printf("cmd.Wait() failed with %s\n", err)
+		return
+	}
 }
