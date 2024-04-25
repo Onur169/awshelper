@@ -3,6 +3,7 @@ package view
 import (
 	"fmt"
 	"fyne.io/fyne/v2"
+	"fyne.io/fyne/v2/container"
 	"fyne.io/fyne/v2/widget"
 	"onursahin.dev/awshelper/controller"
 	"onursahin.dev/awshelper/util"
@@ -29,6 +30,13 @@ func Pods(c *controller.Ctrl, pods []util.Pod) {
 		go util.OpenCmdWithCommand(fmt.Sprintf("kubectl logs -n ma4b %s -f", selectedPod.Name))
 	}
 
-	c.PodWindow.SetContent(list)
+	list.BaseWidget.Resize(fyne.NewSize(util.AppWidth, 400))
+	list.BaseWidget.Refresh()
+
+	searchField := widget.NewEntry()
+
+	content := container.NewVBox(searchField, list)
+
+	c.PodWindow.SetContent(content)
 	c.PodWindow.Show()
 }

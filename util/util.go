@@ -132,7 +132,6 @@ func CommandMap() map[string]string {
 	m["kubectl-version"] = "kubectl version"
 	m["aws-login"] = "aws ecr get-login-password --region eu-central-1 | docker login --username AWS --password-stdin 175218586454.dkr.ecr.eu-central-1.amazonaws.com"
 	m["kubectl-get-pods"] = "kubectl get pods --namespace ma4b"
-	m["ls-la-test"] = "ls -la"
 	return m
 }
 

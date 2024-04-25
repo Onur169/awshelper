@@ -12,6 +12,10 @@ func (c *Ctrl) Actions() func(string) {
 		cmdMap := util.CommandMap()
 		cmd := cmdMap[value]
 
+		if util.GetMockPodsEnv() && value == "kubectl-get-pods" {
+			cmd = "echo 'GetMockPodsEnv is set to true'"
+		}
+
 		var out string
 		var err error
 		go func() {
