@@ -33,6 +33,13 @@ func MockPods() []Pod {
 	}
 }
 
+func MockPods2() []Pod {
+	return []Pod{
+		{Name: "Pod1", Ready: "True", Status: "Running", Restarts: "0", Age: "10m"},
+		{Name: "Pod2", Ready: "False", Status: "Pending", Restarts: "1", Age: "5m"},
+	}
+}
+
 func ParsePods(input string) ([]Pod, error) {
 	var pods []Pod
 

@@ -10,10 +10,8 @@ import (
 	"onursahin.dev/awshelper/util"
 )
 
-func Pods(c *controller.Ctrl, pods []util.Pod) {
-
-	var data = pods
-	list := widget.NewList(
+func buildList(data []util.Pod) *widget.List {
+	return widget.NewList(
 		func() int {
 			return len(data)
 		},
@@ -24,22 +22,42 @@ func Pods(c *controller.Ctrl, pods []util.Pod) {
 			o.(*widget.Label).SetText(data[i].Name)
 		},
 	)
+}
 
-	list.OnSelected = func(id widget.ListItemID) {
-		selectedPod := data[id]
-		fmt.Println(selectedPod)
-		go util.OpenCmdWithCommand(fmt.Sprintf("kubectl logs -n ma4b %s -f", selectedPod.Name))
+func handleOnSelectedListItem(pods []util.Pod) func(id widget.ListItemID) {
+	return func(id widget.ListItemID) {
+		selectedPod := pods[id]
+		cmd := "kubectl logs -n ma4b %s -f"
+		go util.OpenCmdWithCommand(fmt.Sprintf(cmd, selectedPod.Name))
 	}
+}
 
-	searchField := widget.NewEntry()
-
-	content := container.NewBorder(
+func buildListContent(searchField *widget.Entry, list *widget.List) *fyne.Container {
+	return container.NewBorder(
 		searchField,
 		layout.NewSpacer(),
 		layout.NewSpacer(),
 		layout.NewSpacer(),
 		list,
 	)
+}
+
+func Pods(c *controller.Ctrl, pods []util.Pod) {
+
+	list := buildList(pods)
+	list.OnSelected = handleOnSelectedListItem(pods)
+
+	searchField := widget.NewEntry()
+	searchField.PlaceHolder = "Nach Pod suchen"
+	searchField.OnChanged = func(s string) {
+		// Todo: MockPods2 mit gesuchten Einträgen austauschen
+		list = buildList(util.MockPods2())
+		list.OnSelected = handleOnSelectedListItem(util.MockPods2())
+		content := buildListContent(searchField, list)
+		c.PodWindow.SetContent(content)
+	}
+
+	content := buildListContent(searchField, list)
 
 	c.PodWindow.SetContent(content)
 	c.PodWindow.Show()
