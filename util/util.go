@@ -23,20 +23,25 @@ type Pod struct {
 	Age      string
 }
 
-func MockPods() []Pod {
-	return []Pod{
-		{Name: "Pod1", Ready: "True", Status: "Running", Restarts: "0", Age: "10m"},
-		{Name: "Pod2", Ready: "False", Status: "Pending", Restarts: "1", Age: "5m"},
-		{Name: "Pod3", Ready: "True", Status: "Running", Restarts: "2", Age: "20m"},
-		{Name: "Pod4", Ready: "True", Status: "Running", Restarts: "0", Age: "15m"},
-		{Name: "Pod5", Ready: "False", Status: "Pending", Restarts: "3", Age: "25m"},
+func FilterPods(pods []Pod, searchTerm string) []Pod {
+	var filteredPods []Pod
+	for _, pod := range pods {
+		if strings.Contains(pod.Name, searchTerm) {
+			filteredPods = append(filteredPods, pod)
+		}
 	}
+	return filteredPods
 }
 
-func MockPods2() []Pod {
+func MockPods() []Pod {
 	return []Pod{
-		{Name: "Pod1", Ready: "True", Status: "Running", Restarts: "0", Age: "10m"},
-		{Name: "Pod2", Ready: "False", Status: "Pending", Restarts: "1", Age: "5m"},
+		{Name: "Onur-Pod", Ready: "True", Status: "Running", Restarts: "0", Age: "10m"},
+		{Name: "Runo-Pod", Ready: "False", Status: "Pending", Restarts: "1", Age: "5m"},
+		{Name: "Random-Pod", Ready: "True", Status: "Running", Restarts: "2", Age: "20m"},
+		{Name: "Random2-Pod", Ready: "True", Status: "Running", Restarts: "2", Age: "20m"},
+		{Name: "Modnar-Pod", Ready: "True", Status: "Running", Restarts: "0", Age: "15m"},
+		{Name: "Foobar-Pod", Ready: "False", Status: "Pending", Restarts: "3", Age: "25m"},
+		{Name: "Barfoo-Pod", Ready: "False", Status: "Pending", Restarts: "3", Age: "25m"},
 	}
 }
 

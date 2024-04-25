@@ -52,13 +52,16 @@ func main() {
 
 	homeView := viewWrapper(view.Home(c))
 	actionsView := viewWrapper(view.Actions(c))
+	aboutView := viewWrapper(view.About(c))
 
 	homeTab := container.NewTabItemWithIcon("home", theme.HomeIcon(), homeView)
 	actionsTab := container.NewTabItemWithIcon("actions", theme.ComputerIcon(), actionsView)
+	aboutTab := container.NewTabItemWithIcon("about", theme.InfoIcon(), aboutView)
 
 	tabList := []*container.TabItem{
 		homeTab,
 		actionsTab,
+		aboutTab,
 	}
 
 	tabs := container.NewAppTabs(tabList...)

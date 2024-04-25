@@ -50,9 +50,9 @@ func Pods(c *controller.Ctrl, pods []util.Pod) {
 	searchField := widget.NewEntry()
 	searchField.PlaceHolder = "Nach Pod suchen"
 	searchField.OnChanged = func(s string) {
-		// Todo: MockPods2 mit gesuchten Einträgen austauschen
-		list = buildList(util.MockPods2())
-		list.OnSelected = handleOnSelectedListItem(util.MockPods2())
+		filteredPods := util.FilterPods(pods, s)
+		list = buildList(filteredPods)
+		list.OnSelected = handleOnSelectedListItem(filteredPods)
 		content := buildListContent(searchField, list)
 		c.PodWindow.SetContent(content)
 	}
