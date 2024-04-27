@@ -72,7 +72,6 @@ func main() {
 		c.LoadingLabel.Refresh()
 	}
 	tabs.SetTabLocation(container.TabLocationTop)
-
 	appWindow.SetContent(tabs)
 
 	go func() {
